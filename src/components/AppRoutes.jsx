@@ -2,12 +2,16 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 import Main from "./Main";
-import Chat from "./Chat";
+import Timer from "./Chat";
+import { Create } from "./Create";
+import { Add } from "./Add";
 
 const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<Main />} />
-    <Route path="/chat" element={<Chat />} />
+    <Route path="/timer" element={<Timer />} />
+    <Route path="/create" element={<Create />} />
+    <Route path="/add" element={<Add />} />
   </Routes>
 );
 
