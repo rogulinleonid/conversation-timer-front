@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { AppContext } from "./AppRoutes";
+import { Link } from "react-router-dom";
 
 import styles from "../styles/Main.module.css";
 
@@ -8,10 +10,17 @@ export const Create = () => {
   const [totalTime, setTotalTime] = useState();
   const [clientCount, setClientsCount] = useState();
 
+  const context = useContext(AppContext);
+
   const onButtonClick = () => {
-    if (name) {
+    if (name && room && totalTime && clientCount) {
+      context.socket.emit("create", { name, room, totalTime, clientCount });
+    } else {
+      alert("укажите все параметры");
     }
   };
+
+  console.log(context.data);
 
   return (
     <div className={styles.wrap}>
@@ -69,13 +78,15 @@ export const Create = () => {
           />
         </div>
         <div className={styles.group}>
-          <button
-            onClick={onButtonClick}
-            type="submit"
-            className={styles.button}
-          >
-            Создать
-          </button>
+          <Link className={styles.group} to="/Timer">
+            <button
+              onClick={onButtonClick}
+              type="submit"
+              className={styles.button}
+            >
+              Создать
+            </button>
+          </Link>
         </div>
       </div>
     </div>

@@ -1,73 +1,58 @@
 import React from "react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useTimer } from "react-timer-hook";
 
-import styles from "../styles/Main.module.css";
+export const Timer = ({ expiryTimestamp }) => {
+  const {
+    totalSeconds,
+    seconds,
+    minutes,
+    isRunning,
+    start,
+    pause,
+    resume,
+    restart,
+  } = useTimer({
+    expiryTimestamp,
+    onExpire: () => console.warn("onExpire called"),
+  });
 
-const FIELDS = {
-  NAME: "name",
-  ROOM: "room",
-};
-
-const Timer = () => {
-  const { NAME, ROOM } = FIELDS;
-
-  const [values, setValues] = useState({ [NAME]: "", [ROOM]: "" });
-
-  const handleChange = ({ target: { value, name } }) => {
-    setValues({ ...values, [name]: value });
+  const onStartClick = () => {
+    console.log("start");
+    start();
   };
 
-  const handleClick = (e) => {
-    const isDisabled = Object.values(values).some((v) => !v);
-
-    if (isDisabled) e.preventDefault();
+  const onPauseClick = () => {
+    console.log(totalSeconds);
+    pause();
   };
 
   return (
-    <div className={styles.wrap}>
-      <div className={styles.container}>
-        <h1 className={styles.heading}>Join</h1>
-
-        <form className={styles.form}>
-          <div className={styles.group}>
-            <input
-              type="text"
-              name="name"
-              value={values[NAME]}
-              placeholder="Username"
-              className={styles.input}
-              onChange={handleChange}
-              autoComplete="off"
-              required
-            />
-          </div>
-          <div className={styles.group}>
-            <input
-              type="text"
-              name="room"
-              placeholder="Room"
-              value={values[ROOM]}
-              className={styles.input}
-              onChange={handleChange}
-              autoComplete="off"
-              required
-            />
-          </div>
-
-          <Link
-            className={styles.group}
-            onClick={handleClick}
-            to={`/timer?name=${values[NAME]}&room=${values[ROOM]}`}
-          >
-            <button type="submit" className={styles.button}>
-              Sign In
-            </button>
-          </Link>
-        </form>
+    <div style={{ textAlign: "center", color: "#fff" }}>
+      <h1>Ваше время</h1>
+      <div style={{ fontSize: "100px" }}>
+        <span>{minutes}</span>:<span>{seconds}</span>
       </div>
+      <p>{isRunning ? "Вы говорите" : "Говорит кто-то другой"}</p>
+      <button style={{ color: "#fff" }} onClick={onStartClick}>
+        Start
+      </button>
+      <button style={{ color: "#fff" }} onClick={onPauseClick}>
+        Pause
+      </button>
+      <button style={{ color: "#fff" }} onClick={resume}>
+        Resume
+      </button>
+      <button
+        style={{ color: "#fff" }}
+        onClick={() => {
+          // Restarts to 5 minutes timer
+          const time = new Date();
+          time.setSeconds(time.getSeconds() + 300);
+          restart(time);
+        }}
+      >
+        Restart
+      </button>
     </div>
   );
 };
-
-export default Timer;
